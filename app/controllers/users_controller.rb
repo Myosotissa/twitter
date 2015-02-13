@@ -12,6 +12,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
   
   def create
@@ -48,11 +49,7 @@ class UsersController < ApplicationController
   end
   
   private
-  def signed_in_user
-    if not signed_in? 
-      redirect_to signin_url notice: "Пожалуйста войдите в систему"
-  end
-  end
+  
   def correct_user
     if current_user.id != params[:id].to_i
       redirect_to root_url, notice: "Отказано в доступе"

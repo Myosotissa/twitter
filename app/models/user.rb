@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   before_create :create_remember_token
   
   has_secure_password
+  has_many :microposts, dependent: :destroy
   
   def User.new_remember_token
     SecureRandom.urlsafe_base64
@@ -19,6 +20,11 @@ class User < ActiveRecord::Base
     Digest::SHA1.hexdigest(token.to_s)
   end
 
+  def feed
+    # Это предварительное решение. См. полную реализацию в "Following users".
+    Micropost.where("user_id = ?", id)
+  end
+  
   private
 
     def create_remember_token
